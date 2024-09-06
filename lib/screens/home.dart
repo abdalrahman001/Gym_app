@@ -24,7 +24,7 @@ class Home extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
-
+            floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.print)),
             body: Container(
               padding: EdgeInsets.all(10),
               child: ListView.separated(

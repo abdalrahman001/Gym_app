@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_tracker/cubit/cubit.dart';
+import 'package:gym_tracker/cubit/diohelper.dart';
 import 'package:gym_tracker/cubit/states.dart';
 
 class AppLayout extends StatelessWidget {
@@ -15,7 +14,23 @@ class AppLayout extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
+            floatingActionButton:
+            FloatingActionButton(
+              onPressed: () {
+                DioHelper.getdata(
+                  url: 'v1/exercises',  // Correct method call
+                  query: {
+                    'muscle': 'biceps',
+                  },
+                ).then((value) {
+                  print(value?.data.toString());
+                }).catchError((error) {  // Correct way to handle errors
+                  print('Error occurred');
+                  print(error.toString());
+                });
+              },),
+
+              appBar: AppBar(
               actions: [
                 IconButton(
                   onPressed: () {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_tracker/cubit/cubit.dart';
+import 'package:gym_tracker/cubit/diohelper.dart';
 import 'package:gym_tracker/cubit/states.dart';
-import 'package:gym_tracker/screens/exersises.dart';
-import 'package:gym_tracker/screens/home.dart';
-import 'package:gym_tracker/themes/apptheme.dart';
+
 
 import 'cubit/applayout.dart';
 
 void main() {
+  DioHelper.init();
   runApp(MyApp());
 }
 
