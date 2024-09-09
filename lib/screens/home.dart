@@ -24,6 +24,19 @@ class Home extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    AppCubit.get(context).changeTheme();
+
+                  },
+                  icon: Icon(Icons.settings),
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ],
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
             floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.print)),
             body: Container(
               padding: EdgeInsets.all(10),

@@ -14,23 +14,28 @@ class AppLayout extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
-            floatingActionButton:
+            /*floatingActionButton:
             FloatingActionButton(
               onPressed: () {
                 DioHelper.getdata(
-                  url: 'v1/exercises',  // Correct method call
+                  url: 'v1/exercises?',  // Correct method call
                   query: {
+                    'X-Api-Key' :'0W8iOKFt7H0oHdIsDeExWg==aaHNwW1nhvdzDubf',
                     'muscle': 'biceps',
                   },
                 ).then((value) {
-                  print(value?.data.toString());
+                  exercises=List<Map<String,dynamic>>.from(value?.data);
+                  exercises.forEach((exercise) {
+                    print(exercise['name']);
+                  });
+
                 }).catchError((error) {  // Correct way to handle errors
                   print('Error occurred');
                   print(error.toString());
                 });
-              },),
+              },),*/
 
-              appBar: AppBar(
+              /*appBar: AppBar(
               actions: [
                 IconButton(
                   onPressed: () {
@@ -42,12 +47,18 @@ class AppLayout extends StatelessWidget {
                 ),
               ],
               backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
+            ),*/
             body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
             backgroundColor: Theme.of(context).colorScheme.background,
             bottomNavigationBar: BottomNavigationBar(
               onTap:(index)
-              {AppCubit.get(context).bottomNavbarSwap(index);},
+              {
+                AppCubit.get(context).bottomNavbarSwap(index);
+                if (index==3){
+                  AppCubit.get(context).emit(GetExercises());
+                  AppCubit.get(context).getExercises();
+                }
+                },
               currentIndex: AppCubit.get(context).currentIndex,
               items:AppCubit.bottomItem,
               type: BottomNavigationBarType.fixed,

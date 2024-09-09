@@ -6,7 +6,6 @@ ThemeData darkTheme=ThemeData(
   background: Colors.grey.shade900,
     primary: Colors.purple.shade900,
     secondary:Colors.white
-
   )
 );
 ThemeData lightTheme=ThemeData(

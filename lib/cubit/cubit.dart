@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_tracker/cubit/states.dart';
+import 'package:gym_tracker/screens/exerciseWidget.dart';
 import 'package:gym_tracker/screens/exersises.dart';
 import 'package:gym_tracker/screens/history.dart';
 import 'package:gym_tracker/screens/home.dart';
 import 'package:gym_tracker/screens/profile.dart';
 import 'package:gym_tracker/themes/apptheme.dart';
+
+import 'diohelper.dart';
 
 class AppCubit extends Cubit<AppStates>{
   ThemeData currentTheme=darkTheme;
@@ -13,6 +16,8 @@ class AppCubit extends Cubit<AppStates>{
   static AppCubit get(context){
     return BlocProvider.of(context);
   }
+  List<Map<String,dynamic>> exercises=[];
+
   int currentIndex=0;
 
   void changeTheme(){
@@ -32,10 +37,10 @@ class AppCubit extends Cubit<AppStates>{
       emit(BottomBarChangingState());
   }
   List<Widget> screens=[
-    Exersises(),
+    Profile(),
     History(),
     Home(),
-    Profile()
+    Exersises.Exercises()
   ];
   static const List<BottomNavigationBarItem> bottomItem=[
   BottomNavigationBarItem(
@@ -47,5 +52,30 @@ class AppCubit extends Cubit<AppStates>{
   BottomNavigationBarItem(
   icon: Icon(Icons.fitness_center), label: 'Exersises')
 ];
+  void getExercises(){
+    if (exercises.length==0){
+        emit(GetExercises());
+    }
+    DioHelper.getdata(
+      url: 'v1/exercises?',  // Correct method call
+      query: {
+        'X-Api-Key' :'0W8iOKFt7H0oHdIsDeExWg==aaHNwW1nhvdzDubf',
 
+      },
+    ).then((value) {
+      emit(GetExercises());
+      exercises=List<Map<String,dynamic>>.from(value?.data);
+    }).catchError((error) {
+      emit(GetExercisesError());
+      print('Error occurred');
+      print(error.toString());
+    });
+  }
+
+
+  void exerciseUIPresses(Map<String,dynamic> exercise,context){
+    emit(NavigateToExerciseState());
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>ExerciseWidget(exercise: exercise,)));
+
+  }
 }
