@@ -5,7 +5,7 @@ class DioHelper{
   static init(){
     dio=Dio(
       BaseOptions(receiveDataWhenStatusError: true,
-      baseUrl: 'https://api.api-ninjas.com/',
+        baseUrl: 'https://wger.de',
       )
     );
   }

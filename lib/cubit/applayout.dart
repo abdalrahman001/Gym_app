@@ -51,6 +51,7 @@ class AppLayout extends StatelessWidget {
             body: AppCubit.get(context).screens[AppCubit.get(context).currentIndex],
             backgroundColor: Theme.of(context).colorScheme.background,
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
               onTap:(index)
               {
                 AppCubit.get(context).bottomNavbarSwap(index);

@@ -5,22 +5,18 @@ import 'package:gym_tracker/cubit/cubit.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:gym_tracker/cubit/states.dart';
 
-class ExercisesScreen extends StatelessWidget {
-  const ExercisesScreen({Key? key}) : super(key: key);  // Fixed the constructor
+class AddExercisesScreen extends StatelessWidget {
+  final bool isReplacing;  // Flag to indicate if it's a replacement
+  final int? replaceIndex; // Optional index if replacing an exercise
+  final Workout workout;
+  const AddExercisesScreen({Key? key, required this.isReplacing, this.replaceIndex,required this.workout }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {
-        if(AppCubit.get(context).ex.isEmpty){
-          print("Empty");
-        }else{
-          print("NotEmpty");
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
-        List<Exercise> exercises = AppCubit.get(context).ex;
+        List<Exercise> exercises = AppCubit.get(context).ex;  // Fetch exercises
 
         return Scaffold(
           appBar: AppBar(

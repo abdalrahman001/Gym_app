@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
           .add(Workout(name: 'Workout$i', date: formatDate(DateTime.now())));
       for (int j = 0; j < 7; j++) {
         myWorkouts[i]
-            .addExersise(Exercise(name: 'Shoulder$j', Category: 'Press$j'));
+            .addExersise(Exercise(name: 'Shoulder$j', category: 'Press$j', instructions: ''));
       }
     }
     return BlocProvider(
@@ -25,11 +25,11 @@ class Home extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
+              title: Text("Workouts",style: TextStyle(color: Theme.of(context).colorScheme.secondary,),),
               actions: [
                 IconButton(
                   onPressed: () {
                     AppCubit.get(context).changeTheme();
-
                   },
                   icon: Icon(Icons.settings),
                   color: Theme.of(context).colorScheme.secondary,
@@ -37,19 +37,32 @@ class Home extends StatelessWidget {
               ],
               backgroundColor: Theme.of(context).colorScheme.primary,
             ),
-            floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.print)),
-            body: Container(
-              padding: EdgeInsets.all(10),
-              child: ListView.separated(
-                  itemCount: myWorkouts.length,
-                  itemBuilder: (context, index) {
-                    return WorkoutUI(
-                        workout: myWorkouts[index], context: context);
-                  },
-                  separatorBuilder: (context, index) => SizedBox.fromSize(
-                        size: Size(20, 10),
-                      )),
-            ),
+            body:
+               Container(
+                 padding: EdgeInsets.all(10),
+                 child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color:Theme.of(context).colorScheme.primary,),
+                      width: MediaQuery.of(context).size.width,
+                        child: TextButton(onPressed: (){}, child: 
+                        Text('Start an empty workout',style: TextStyle(color: Theme.of(context).colorScheme.secondary,),))),
+
+                    Expanded(
+                      child: ListView.separated(
+                          itemCount: myWorkouts.length,
+                          itemBuilder: (context, index) {
+                            return WorkoutUI(
+                                workout: myWorkouts[index], context: context);
+                          },
+                          separatorBuilder: (context, index) => SizedBox.fromSize(
+                                size: Size(20, 10),
+                              )),
+                    ),
+                  ],
+              ),
+               ),
+
             backgroundColor: Theme.of(context).colorScheme.background,
 
           );

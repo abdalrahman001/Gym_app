@@ -6,3 +6,5 @@ class GetExercises extends  AppStates{}
 class GetExercisesLoading extends  AppStates{}
 class GetExercisesError extends  AppStates{}
 class NavigateToExerciseState extends  AppStates{}
+class StartWorkoutState extends  AppStates{}
+class ChoosingExerciseState extends AppStates{}
