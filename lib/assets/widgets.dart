@@ -23,18 +23,7 @@ class Exercise {
     required this.category,
     required this.instructions,
   });
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    // Parsing category name and description from the exercise
-    String category = json['category']['name'] ?? 'Unknown Category';
-    String instructions = json['exercises'][0]['description'] ?? 'No instructions provided';
-    String name = json['exercises'][0]['name'] ?? 'Unknown Exercise';
 
-    return Exercise(
-      name: name,
-      category: category,
-      instructions: instructions,
-    );
-  }
 
 }
 Widget WorkoutUI({required Workout workout, required BuildContext context}) {

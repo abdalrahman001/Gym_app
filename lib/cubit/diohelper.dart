@@ -5,11 +5,11 @@ class DioHelper{
   static init(){
     dio=Dio(
       BaseOptions(receiveDataWhenStatusError: true,
-        baseUrl: 'https://wger.de',
+        baseUrl: 'https://api.api-ninjas.com/v1/',
       )
     );
   }
-  static Future<Response?> getdata({required String url,required Map<String ,dynamic> query})
+  static Future<Response?> getdata({required String url,required Map<String ,dynamic> query, required header})
   async{
       return await dio?.get(url,queryParameters: query);
 }

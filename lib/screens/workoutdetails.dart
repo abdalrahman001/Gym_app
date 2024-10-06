@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_tracker/cubit/cubit.dart';
 import 'package:gym_tracker/cubit/states.dart';
 import '../assets/widgets.dart';
-import 'addexersisescreen.dart';
-import 'exersises.dart';
 
 
 class WorkoutDetailScreen extends StatelessWidget{
@@ -40,11 +38,7 @@ class WorkoutDetailScreen extends StatelessWidget{
                   ),
                   IconButton(
                     onPressed: () {
-                      AppCubit.get(context).getExercises();
-                      AppCubit.get(context).emit(ChoosingExerciseState());
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder:(context)=> AddExercisesScreen(isReplacing: true,workout: workout,replaceIndex: index,))
-                      );
+                        AppCubit.get(context).addExercise(context);
                     },
                     icon: Icon(Icons.swap_horiz),
                   ),
@@ -55,21 +49,17 @@ class WorkoutDetailScreen extends StatelessWidget{
           separatorBuilder: (context, index) => Divider(),
         ),
         floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            AppCubit.get(context).createDatabase();
+            AppCubit.get(context).insertDatabase("1", 'blah', 'instructions', 'category');
+            AppCubit.get(context).addExercise(context);
 
-          onPressed: (){
-            AppCubit.get(context).emit(GetExercises());
-            AppCubit.get(context).getExercises();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  ExercisesScreen(),
-              ),
-            );
-
-          },  // Call add exercise method
+          },
           child: Icon(Icons.add),
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
+
+
       ),
 
     )

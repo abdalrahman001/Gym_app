@@ -7,20 +7,21 @@ import 'package:gym_tracker/screens/home.dart';
 import 'package:gym_tracker/screens/profile.dart';
 import 'package:gym_tracker/screens/templateworkout.dart';
 import 'package:gym_tracker/themes/apptheme.dart';
+import 'package:sqflite/sqflite.dart';
 import '../assets/widgets.dart';
+import '../screens/addexersisescreen.dart';
 import '../screens/exersises.dart';
 import 'diohelper.dart';
 
 class AppCubit extends Cubit<AppStates> {
   ThemeData currentTheme = darkTheme;
-
+  var Database;
   AppCubit() : super(InitStates());
 
   static AppCubit get(context) {
     return BlocProvider.of(context);
   }
 
-  List<Map<String, dynamic>> exercises = [];
   List<Exercise> ex = [];
   int currentIndex = 0;
 
@@ -67,36 +68,48 @@ class AppCubit extends Cubit<AppStates> {
     ),
   ];
 
-  void getExercises() {
-    if (exercises.isEmpty) {
-      emit(GetExercises());
-    }
+  Future<void> getExercises() async {
+    emit(
+        GetExercisesLoading()); // Emit loading state before making the API call
 
-    DioHelper.getdata(
-      url: '/api/v2/exercisebaseinfo/', // Correct API endpoint
-      query: {},
-    ).then((value) {
-      emit(GetExercises());
+    try {
+      final value = await DioHelper.getdata(
+        url: 'exercises/',
+        header: {
+          "x-api-key": "il2SoM2zcXDiaKcyBdQbKxxY0JKWBomNR9uRkJ5q",
+        },
+        query: {
+          "x-api-key": "il2SoM2zcXDiaKcyBdQbKxxY0JKWBomNR9uRkJ5q",
+        },
+      );
 
-      // Assuming value?.data contains the API response body
-      List<dynamic> data = value?.data['results'];  // Extract the list of exercises from 'results'
+      // Check if the response data has 'exercises' as a list
+      if (value?.data != null && value?.data.isNotEmpty) {
+        print("notEmpty");
 
-      // Convert the response into a list of Exercise objects
-      ex = data.map((exerciseData) {
-        return Exercise.fromJson(exerciseData);
-      }).toList();
+        // Loop through each exercise in the API response and insert it into the database
+        for (var exerciseItem in value?.data) {
+          // Insert each exercise into the database
+          insertDatabase(
+            exerciseItem['id'].toString(),
+            // Assuming 'id' is part of the response
+            exerciseItem['name'], // Exercise name
+            exerciseItem['instructions'], // Instructions
+            exerciseItem['muscle'], // Category or muscle group
+          );
+        }
 
-      // Printing the exercises to verify parsing
-      for (var exercise in ex) {
-       // print('Name: ${exercise.name}, Category: ${exercise.category}');
+        emit(
+            GetExercisesSuccess()); // Emit success state after inserting data into the database
+      } else {
+        emit(GetExercisesEmpty()); // Emit empty state if no exercises found
       }
-
-      emit(GetExercises());
-    }).catchError((error) {
-      emit(GetExercisesError());
+    } catch (error) {
+      emit(GetExercisesError()); // Emit error state on failure
       print('Error occurred: ${error.toString()}');
-    });
+    }
   }
+
 
   void exerciseUIPresses(Exercise exercise, context) {
     emit(NavigateToExerciseState());
@@ -107,4 +120,51 @@ class AppCubit extends Cubit<AppStates> {
     emit(StartWorkoutState());
     Navigator.push(context, MaterialPageRoute(builder: (context) => WorkoutTemplate()));
   }
+
+  void addExercise(context) {
+    emit(GetExercisesLoading());
+
+    getExercises().then((value) {
+        print('AppCubit ex is ${ex.isEmpty.toString()}');
+        emit(ChoosingExerciseState());
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => ExercisesScreen(),
+    ),
+    );}
+    );
+  }
+  void createDatabase()async{
+     Database=await openDatabase(
+      'ex.db',
+      version: 1,
+      onCreate: (Database,version) async {
+        await Database.execute(
+            'CREATE TABLE Exercise (id INTEGER PRIMARY KEY, name TEXT, instructions TEXT, category TEXT)');
+        print("Created DB");
+      },
+        onOpen: (Database){
+        print("DB OPENED");
+        }
+    );
+  }
+
+  void insertDatabase(String id, String name, String instructions, String category) async {
+    await Database.transaction((txn) async {
+      try {
+        int value = await txn.rawInsert(
+          'INSERT INTO Exercise(id, name, instructions, category) VALUES(?, ?, ?, ?)',
+          [id, name, instructions, category],
+        );
+        print('Inserted: $value'); // Prints the inserted row's ID
+      } catch (error) {
+        print("Error inserting to DB: ${error.toString()}");
+      }
+    });
+  }
+
+  void deleteDatabase(){}
+  void updateDatabase(){}
+  void getDatabase(){}
 }

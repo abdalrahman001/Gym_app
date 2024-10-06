@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_tracker/cubit/cubit.dart';
 import 'package:gym_tracker/cubit/diohelper.dart';
 import 'package:gym_tracker/cubit/states.dart';
+import 'package:gym_tracker/screens/addexersisescreen.dart';
+import 'package:gym_tracker/screens/exersises.dart';
 
 
-import 'cubit/applayout.dart';
+import 'screens/applayout.dart';
 
 void main() {
   DioHelper.init();
